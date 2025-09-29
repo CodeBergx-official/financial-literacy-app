@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Expenses{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+
+  <h2 class="text-2xl font-semibold mb-6">Expense Tracker</h2>
+
+  <form method="post" class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
+    <select name="category" required class="col-span-1 md:col-span-1 px-3 py-2 border rounded-md" aria-label="Select Category">
+      <option value="" disabled selected hidden>Select Category</option>
+      {% for cat in default_categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+      {% endfor %}
+    </select>
+
+    <input
+      type="number"
+      name="amount"
+      placeholder="Amount"
+      step="0.01"
+      required
+      class="col-span-1 md:col-span-1 px-3 py-2 border rounded-md"
+      aria-label="Enter Amount"
+    />
+
+    <input
+      type="text"
+      name="description"
+      placeholder="Description"
+      class="col-span-1 md:col-span-2 px-3 py-2 border rounded-md"
+      aria-label="Enter Description"
+    />
+
+    <input
+      type="date"
+      name="date"
+      required
+      value="{{ current_date }}"
+      class="col-span-1 md:col-span-1 px-3 py-2 border rounded-md"
+      aria-label="Select Date"
+    />
+
+    <button
+      type="submit"
+      class="col-span-1 md:col-span-1 bg-green-600 text-white rounded-md px-4 py-2 hover:bg-green-700"
+      aria-label="Add Expense"
+    >
+      Add
+    </button>
+  </form>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 border">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+          <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for expense in expenses %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2">{{ expense.category }}</td>
+          <td class="px-4 py-2">{{ expense.amount }}</td>
+          <td class="px-4 py-2">{{ expense.description }}</td>
+          <td class="px-4 py-2">{{ expense.date.strftime('%Y-%m-%d') }}</td>
+          <td class="px-4 py-2 text-center space-x-2 whitespace-nowrap">
+            <a href="{{ url_for('expenses.edit_expense', id=expense.id) }}" class="text-yellow-500 hover:text-yellow-700 font-semibold" aria-label="Edit Expense">Edit</a>
+            <form action="{{ url_for('expenses.delete_expense', id=expense.id) }}" method="post" class="inline" aria-label="Delete Expense">
+              <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:text-red-800 font-semibold">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center p-4 text-gray-500">No expenses found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

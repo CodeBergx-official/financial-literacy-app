@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}Financial Literacy App{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  {% if current_user.is_authenticated %}
+  <nav class="bg-blue-700 text-white sticky top-0 z-50 shadow">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <a href="{{ url_for('dashboard.dashboard') }}" class="text-xl font-bold hover:text-blue-300">FinanceApp</a>
+      <ul class="flex space-x-6">
+        <li><a href="{{ url_for('salary.manage_salary') }}" class="hover:text-blue-300 {% if 'salary' in request.endpoint %}font-semibold underline{% endif %}">Salary</a></li>
+        <li><a href="{{ url_for('expenses.expenses') }}" class="hover:text-blue-300 {% if 'expenses' in request.endpoint %}font-semibold underline{% endif %}">Expenses</a></li>
+        <li><a href="{{ url_for('insights.insights') }}" class="hover:text-blue-300 {% if 'insights' in request.endpoint %}font-semibold underline{% endif %}">Savings & Insights</a></li>
+      </ul>
+      <div class="flex items-center space-x-4">
+        <span>{{ current_user.username }}</span>
+        <a href="{{ url_for('auth.logout') }}" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</a>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="flex-grow container mx-auto px-4 py-6">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="mb-4 px-4 py-3 bg-blue-100 text-blue-800 rounded shadow">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-gray-200 text-center py-4 text-sm text-gray-600">
+    &copy; 2025 Financial Literacy App
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

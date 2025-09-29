@@ -1,0 +1,11 @@
+/* Add spacing and styling if needed */
+body {
+  padding-bottom: 3rem;
+}
+
+#calendar-clock-widget .card {
+  width: 220px;
+  text-align: center;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+}

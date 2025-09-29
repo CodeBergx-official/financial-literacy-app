@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Edit Expense{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+
+  <h2 class="text-2xl font-semibold mb-6">Edit Expense</h2>
+  
+  <form method="post" class="space-y-4">
+    <div>
+      <label for="category" class="block mb-1 font-medium">Category</label>
+      <input type="text" id="category" name="category" value="{{ expense.category }}" required class="w-full px-3 py-2 border rounded-md" />
+    </div>
+    <div>
+      <label for="amount" class="block mb-1 font-medium">Amount</label>
+      <input type="number" id="amount" name="amount" step="0.01" value="{{ expense.amount }}" required class="w-full px-3 py-2 border rounded-md" />
+    </div>
+    <div>
+      <label for="description" class="block mb-1 font-medium">Description</label>
+      <input type="text" id="description" name="description" value="{{ expense.description }}" class="w-full px-3 py-2 border rounded-md" />
+    </div>
+    <div>
+      <label for="date" class="block mb-1 font-medium">Date</label>
+      <input type="date" id="date" name="date" value="{{ expense.date.strftime('%Y-%m-%d') }}" required class="w-full px-3 py-2 border rounded-md" />
+    </div>
+    <div class="flex items-center space-x-4">
+      <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">Save</button>
+      <a href="{{ url_for('expenses.expenses') }}" class="text-gray-600 hover:text-gray-900">Cancel</a>
+    </div>
+  </form>
+  
+</div>
+{% endblock %}

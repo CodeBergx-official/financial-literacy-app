@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Savings & Insights{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+  <h2 class="text-2xl font-semibold mb-4">Savings & Insights</h2>
+
+  <div class="text-lg mb-6">
+    Total Savings: 
+    <span class="font-bold {% if savings > 0 %}text-green-600{% else %}text-red-600{% endif %}">
+      {{ savings | round(2) }}
+    </span>
+  </div>
+
+  {% if top_categories %}
+    <h3 class="font-semibold mb-2">Top Spending Categories</h3>
+    <ul class="mb-6 list-disc list-inside">
+      {% for cat, amt in top_categories %}
+      <li>{{ cat }}: <span class="font-medium">{{ amt | round(2) }}</span></li>
+      {% endfor %}
+    </ul>
+    <canvas id="spendingChart" class="mb-8"></canvas>
+  {% else %}
+    <p class="mb-6">No expenses recorded yet.</p>
+  {% endif %}
+
+  {% if overspending %}
+    <div class="mb-4 p-4 text-yellow-800 bg-yellow-100 rounded border border-yellow-300">
+      ⚠️ Warning: You may be overspending in some categories!
+    </div>
+  {% endif %}
+
+  {% if saving_positive %}
+    <div id="confetti-canvas" class="mb-4"></div>
+    <script src="{{ url_for('static', filename='js/confetti.js') }}"></script>
+    <script>
+      runConfetti();
+    </script>
+    <div class="p-4 bg-green-100 text-green-800 rounded shadow">
+      🎉 Congratulations! Your savings are positive.
+    </div>
+  {% else %}
+    <div class="p-4 bg-blue-100 text-blue-800 rounded shadow">
+      Try to reduce your spending to grow your savings!
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  {% if top_categories %}
+  const ctx = document.getElementById('spendingChart').getContext('2d');
+  const data = {
+    labels: [{% for cat, amt in top_categories %}'{{ cat }}',{% endfor %}],
+    datasets: [{
+      label: 'Spending by Category',
+      data: [{% for cat, amt in top_categories %}{{ amt }},{% endfor %}],
+      backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#6366f1'],
+      hoverOffset: 20
+    }]
+  };
+  const config = {
+    type: 'doughnut',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  };
+  new Chart(ctx, config);
+  {% endif %}
+</script>
+{% endblock %}
